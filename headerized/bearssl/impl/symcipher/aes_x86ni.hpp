@@ -1,3 +1,6 @@
+#ifndef BEARSSL_IMPL_SYMCIPHER_AES_X86NI_HPP
+#define BEARSSL_IMPL_SYMCIPHER_AES_X86NI_HPP
+
 /*
  * Copyright (c) 2017 Thomas Pornin <pornin@bolet.org>
  *
@@ -48,7 +51,7 @@
 #endif
 
 /* see inner.h */
-int
+ inline int
 br_aes_x86ni_supported(void)
 {
 	/*
@@ -56,13 +59,13 @@ br_aes_x86ni_supported(void)
 	 *   19   SSE4.1 (used for _mm_insert_epi32(), for AES-CTR)
 	 *   25   AES-NI
 	 */
-#define MASK   0x02080000
+#define _opt_libs_BearSSL_src_symcipher_aes_x86ni_c_MASK   0x02080000
 
 #if BR_AES_X86NI_GCC
 	unsigned eax, ebx, ecx, edx;
 
 	if (__get_cpuid(1, &eax, &ebx, &ecx, &edx)) {
-		return (ecx & MASK) == MASK;
+		return (ecx & _opt_libs_BearSSL_src_symcipher_aes_x86ni_c_MASK) == _opt_libs_BearSSL_src_symcipher_aes_x86ni_c_MASK;
 	} else {
 		return 0;
 	}
@@ -70,12 +73,12 @@ br_aes_x86ni_supported(void)
 	int info[4];
 
 	__cpuid(info, 1);
-	return ((uint32_t)info[2] & MASK) == MASK;
+	return ((uint32_t)info[2] & _opt_libs_BearSSL_src_symcipher_aes_x86ni_c_MASK) == _opt_libs_BearSSL_src_symcipher_aes_x86ni_c_MASK;
 #else
 	return 0;
 #endif
 
-#undef MASK
+#undef _opt_libs_BearSSL_src_symcipher_aes_x86ni_c_MASK
 }
 
 /*
@@ -161,12 +164,12 @@ x86ni_keysched(__m128i *sk, const void *key, size_t len)
 {
 	const unsigned char *kb;
 
-#define KEXP128(k, i, rcon)   do { \
+#define _opt_libs_BearSSL_src_symcipher_aes_x86ni_c_KEXP128(k, i, rcon)   do { \
 		k = expand_step128(k, _mm_aeskeygenassist_si128(k, rcon)); \
 		sk[i] = k; \
 	} while (0)
 
-#define KEXP192(i, rcon1, rcon2)   do { \
+#define _opt_libs_BearSSL_src_symcipher_aes_x86ni_c_KEXP192(i, rcon1, rcon2)   do { \
 		sk[(i) + 0] = t1; \
 		sk[(i) + 1] = t3; \
 		t2 = _mm_aeskeygenassist_si128(t3, rcon1); \
@@ -181,7 +184,7 @@ x86ni_keysched(__m128i *sk, const void *key, size_t len)
 		expand_step192(&t1, &t2, &t3); \
 	} while (0)
 
-#define KEXP256(i, rcon)   do { \
+#define _opt_libs_BearSSL_src_symcipher_aes_x86ni_c_KEXP256(i, rcon)   do { \
 		sk[(i) + 0] = t3; \
 		t2 = _mm_aeskeygenassist_si128(t3, rcon); \
 		expand_step256_1(&t1, &t2); \
@@ -196,26 +199,26 @@ x86ni_keysched(__m128i *sk, const void *key, size_t len)
 	case 16:
 		t1 = _mm_loadu_si128((const void *)kb);
 		sk[0] = t1;
-		KEXP128(t1,  1, 0x01);
-		KEXP128(t1,  2, 0x02);
-		KEXP128(t1,  3, 0x04);
-		KEXP128(t1,  4, 0x08);
-		KEXP128(t1,  5, 0x10);
-		KEXP128(t1,  6, 0x20);
-		KEXP128(t1,  7, 0x40);
-		KEXP128(t1,  8, 0x80);
-		KEXP128(t1,  9, 0x1B);
-		KEXP128(t1, 10, 0x36);
+		_opt_libs_BearSSL_src_symcipher_aes_x86ni_c_KEXP128(t1,  1, 0x01);
+		_opt_libs_BearSSL_src_symcipher_aes_x86ni_c_KEXP128(t1,  2, 0x02);
+		_opt_libs_BearSSL_src_symcipher_aes_x86ni_c_KEXP128(t1,  3, 0x04);
+		_opt_libs_BearSSL_src_symcipher_aes_x86ni_c_KEXP128(t1,  4, 0x08);
+		_opt_libs_BearSSL_src_symcipher_aes_x86ni_c_KEXP128(t1,  5, 0x10);
+		_opt_libs_BearSSL_src_symcipher_aes_x86ni_c_KEXP128(t1,  6, 0x20);
+		_opt_libs_BearSSL_src_symcipher_aes_x86ni_c_KEXP128(t1,  7, 0x40);
+		_opt_libs_BearSSL_src_symcipher_aes_x86ni_c_KEXP128(t1,  8, 0x80);
+		_opt_libs_BearSSL_src_symcipher_aes_x86ni_c_KEXP128(t1,  9, 0x1B);
+		_opt_libs_BearSSL_src_symcipher_aes_x86ni_c_KEXP128(t1, 10, 0x36);
 		return 10;
 
 	case 24:
 		t1 = _mm_loadu_si128((const void *)kb);
 		t3 = _mm_loadu_si128((const void *)(kb + 8));
 		t3 = _mm_shuffle_epi32(t3, 0x4E);
-		KEXP192(0, 0x01, 0x02);
-		KEXP192(3, 0x04, 0x08);
-		KEXP192(6, 0x10, 0x20);
-		KEXP192(9, 0x40, 0x80);
+		_opt_libs_BearSSL_src_symcipher_aes_x86ni_c_KEXP192(0, 0x01, 0x02);
+		_opt_libs_BearSSL_src_symcipher_aes_x86ni_c_KEXP192(3, 0x04, 0x08);
+		_opt_libs_BearSSL_src_symcipher_aes_x86ni_c_KEXP192(6, 0x10, 0x20);
+		_opt_libs_BearSSL_src_symcipher_aes_x86ni_c_KEXP192(9, 0x40, 0x80);
 		sk[12] = t1;
 		return 12;
 
@@ -223,12 +226,12 @@ x86ni_keysched(__m128i *sk, const void *key, size_t len)
 		t1 = _mm_loadu_si128((const void *)kb);
 		t3 = _mm_loadu_si128((const void *)(kb + 16));
 		sk[0] = t1;
-		KEXP256( 1, 0x01);
-		KEXP256( 3, 0x02);
-		KEXP256( 5, 0x04);
-		KEXP256( 7, 0x08);
-		KEXP256( 9, 0x10);
-		KEXP256(11, 0x20);
+		_opt_libs_BearSSL_src_symcipher_aes_x86ni_c_KEXP256( 1, 0x01);
+		_opt_libs_BearSSL_src_symcipher_aes_x86ni_c_KEXP256( 3, 0x02);
+		_opt_libs_BearSSL_src_symcipher_aes_x86ni_c_KEXP256( 5, 0x04);
+		_opt_libs_BearSSL_src_symcipher_aes_x86ni_c_KEXP256( 7, 0x08);
+		_opt_libs_BearSSL_src_symcipher_aes_x86ni_c_KEXP256( 9, 0x10);
+		_opt_libs_BearSSL_src_symcipher_aes_x86ni_c_KEXP256(11, 0x20);
 		sk[13] = t3;
 		t2 = _mm_aeskeygenassist_si128(t3, 0x40);
 		expand_step256_1(&t1, &t2);
@@ -239,9 +242,9 @@ x86ni_keysched(__m128i *sk, const void *key, size_t len)
 		return 0;
 	}
 
-#undef KEXP128
-#undef KEXP192
-#undef KEXP256
+#undef _opt_libs_BearSSL_src_symcipher_aes_x86ni_c_KEXP128
+#undef _opt_libs_BearSSL_src_symcipher_aes_x86ni_c_KEXP192
+#undef _opt_libs_BearSSL_src_symcipher_aes_x86ni_c_KEXP256
 }
 
 /* see inner.h */
@@ -275,4 +278,5 @@ br_aes_x86ni_keysched_dec(unsigned char *skni, const void *key, size_t len)
 	return num_rounds;
 }
 
+#endif
 #endif
