@@ -36,7 +36,6 @@
 #include <arpa/inet.h>
 #include <unistd.h>
 
-#include "bearssl.h"
 #include "bearssl/bearssl.hpp"
 
 /*
