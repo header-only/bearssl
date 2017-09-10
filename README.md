@@ -1,3 +1,16 @@
+# header-only BearSSL
+This library was generated from the official [BearSSL Web site](https://www.bearssl.org/) with the still-closed-source headerizer tool, which automagically transforms any dependency in an header-only one.
+
+Using it is as simple as :
+
+```cpp
+#include <bearssl/bearssl.hpp>
+```
+
+Nothing to link, nothing to depend on. Just coding.
+
+See [samples/client_basic.cpp](samples/client_basic.cpp) and [samples/server_basic.cpp](samples/server_basic.cpp) for an example.
+
 # Documentation
 
 The most up-to-date documentation is supposed to be available on the
